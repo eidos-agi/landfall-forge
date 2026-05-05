@@ -6,14 +6,14 @@ Purpose-specific arrival rituals for AI-operated repos.
 
 A landfall is what an agent does when it arrives inside a repo before acting. It refreshes the right evidence, compares it to the repo's current operating state, writes durable updates, and produces the next responsibilities.
 
-The important part: a repo can have many landfalls.
+The important part: a repo can have many landfalls, and they can be different sizes.
 
 For a house-sale repo:
 
-- `closing-landfall` checks closing portal texts, legal emails, DocuSign, calendar, and human-only actions.
-- `payables-landfall` checks invoices, finance searches, payment risk, and payables.
-- `listing-landfall` checks realtor messages, photos, measurements, market docs, and launch blockers.
-- `heather-landfall` checks the Heather thread and drafts one clean status update.
+- `closinglock-landfall` can be tiny: only the secure portal, MFA stops, and open tasks.
+- `payables-landfall` can be medium: invoices, finance searches, payment risk, and payables.
+- `listing-landfall` can be broad: realtor messages, photos, measurements, market docs, launch blockers, and drafts.
+- `house-sale-landfall` can be strategic: the whole operating picture, what changed, what Daniel owns, what must be delegated, and what is unsafe for an agent.
 
 Each landfall has a unique purpose, evidence map, stop conditions, and write targets.
 
@@ -31,6 +31,7 @@ landfalls/
 The YAML definition is the contract. It says:
 
 - why the landfall exists
+- how large its scope is
 - when to run it
 - which sources to refresh
 - what questions to answer
@@ -40,6 +41,26 @@ The YAML definition is the contract. It says:
 - what counts as done
 
 Landfall outputs go into the repo's existing surfaces. A landfall should update the repo's task list, wiki, payables file, calendar note, or evidence folder. It should not create a second hidden task system.
+
+## Size And Scope
+
+Landfalls should be as small as they can be while still doing the job.
+
+| Size | Use When | Example |
+| --- | --- | --- |
+| `micro` | One notification, portal, person, or payment needs a safe refresh. | `closinglock-landfall` |
+| `focused` | One workstream has multiple sources and task outputs. | `payables-landfall` |
+| `broad` | A domain needs a full refresh across messages, email, repo, and tasks. | `listing-landfall` |
+| `strategic` | The agent needs an operating picture and next responsibilities across the system. | `house-sale-landfall` |
+
+The agent should infer candidate landfalls from the user's past steering, repeated pain, repo shape, task history, and current context. But it should not silently decide the topology. It should suggest options with tradeoffs:
+
+- small and precise
+- medium and operational
+- broad and coordinating
+- strategic and slower
+
+Then it should recommend one.
 
 ## Skills
 
@@ -70,4 +91,3 @@ Then ask an agent:
 ## License
 
 MIT - Eidos AGI
-

@@ -1,9 +1,22 @@
 # Copy to: landfalls/<name>.yaml
 landfall_version: 1
 name: example-landfall
+size: focused  # micro | focused | broad | strategic
 purpose: >
   State the unique job this landfall performs. Keep it narrow enough that
   a different landfall could own a different arrival ritual in the same repo.
+
+inference:
+  why_this_landfall_probably_exists:
+    - "What repeated user pain, repo structure, message pattern, or task drift suggests this landfall is needed?"
+  alternatives_considered:
+    - name: smaller-version
+      size: micro
+      tradeoff: "Faster and safer, but may miss adjacent responsibilities."
+    - name: broader-version
+      size: broad
+      tradeoff: "More complete, but slower and more likely to blur ownership."
+  recommended_shape: focused
 
 when_to_run:
   - "At the start of work in this domain"
@@ -11,10 +24,15 @@ when_to_run:
   - "Before sending a human-facing status update"
 
 scope:
+  grain: "one workstream"  # one notification | one person | one workstream | whole repo | whole ecosystem
   owns:
     - "The responsibility this landfall owns"
   does_not_own:
     - "Adjacent responsibility owned by another landfall"
+  can_expand_to:
+    - "Name a broader landfall this can roll up into"
+  can_split_into:
+    - "Name a smaller landfall if this becomes too broad"
 
 sources:
   repo:
@@ -49,6 +67,8 @@ sources:
       - "bank or wire details"
 
 questions:
+  - id: right_size
+    prompt: "Is this landfall still the right size, or should it be split/expanded?"
   - id: changed_facts
     prompt: "What materially changed since the last landfall?"
   - id: responsibilities
@@ -69,6 +89,8 @@ write_targets:
 
 output:
   required_sections:
+    - "Why this landfall shape"
+    - "Options considered"
     - "New facts"
     - "Changed responsibilities"
     - "Task updates made"
@@ -85,4 +107,3 @@ done_when:
   - "Repo state has been updated or a no-change reason is recorded."
   - "Human-only actions are clearly separated from agent actions."
   - "Next actions are ordered."
-

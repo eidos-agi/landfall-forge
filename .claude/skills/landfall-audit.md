@@ -9,8 +9,11 @@ Use this when the user asks whether a repo's landfalls are good, complete, overl
 1. List `landfalls/*.yaml`.
 2. For each landfall, check:
    - has unique purpose
+   - declares a valid size: `micro`, `focused`, `broad`, or `strategic`
+   - includes inference notes and alternatives considered
    - has `when_to_run`
    - has ownership and non-ownership boundary
+   - has split/expand hints when scope may drift
    - lists concrete sources
    - asks operational questions
    - declares write targets
@@ -20,6 +23,8 @@ Use this when the user asks whether a repo's landfalls are good, complete, overl
 4. Flag:
    - missing landfalls
    - overlapping landfalls
+   - landfalls that are too broad for their purpose
+   - landfalls that are too small to answer their stated questions
    - vague source definitions
    - no write targets
    - unsafe missing stop conditions
@@ -48,4 +53,5 @@ Recommended fixes:
 - Read-only unless the user asks to fix.
 - A landfall without write targets is only a checklist; flag it.
 - A landfall without stop conditions is unsafe; flag it.
-
+- A landfall without size is ambiguous; flag it.
+- A landfall that does not preserve alternatives considered will be hard to refine later; warn on it.

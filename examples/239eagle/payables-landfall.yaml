@@ -1,8 +1,22 @@
 landfall_version: 1
 name: payables-landfall
+size: focused
 purpose: >
   Refresh house-sale payables, verify which invoices are paid or unpaid,
   prevent duplicate payments, and update the repo's payables and tasks.
+
+inference:
+  why_this_landfall_probably_exists:
+    - "The user repeatedly asks whether house-sale vendors were paid."
+    - "The repo contains conflicting payment evidence that needs source-by-source reconciliation."
+  alternatives_considered:
+    - name: vendor-payment-landfall
+      size: micro
+      tradeoff: "Good for one vendor; misses cross-vendor duplicate-payment risk."
+    - name: house-sale-landfall
+      size: strategic
+      tradeoff: "More complete; slower and too broad before a single payment."
+  recommended_shape: focused
 
 when_to_run:
   - "Before paying any house-sale invoice"
@@ -10,6 +24,7 @@ when_to_run:
   - "Before sending Heather a status update that mentions payments"
 
 scope:
+  grain: "one workstream"
   owns:
     - "Vendor invoice payment status"
     - "Duplicate-payment risk"
@@ -18,6 +33,10 @@ scope:
     - "Legal portal tasks"
     - "Listing price decisions"
     - "Tax eligibility"
+  can_expand_to:
+    - "house-sale-landfall"
+  can_split_into:
+    - "single-vendor-payment-landfall"
 
 sources:
   repo:
@@ -40,6 +59,8 @@ sources:
       - "reeves finance search <vendor> --days 120 --limit 50 --json"
 
 questions:
+  - id: right_size
+    prompt: "Is payables-landfall still the right size, or should one vendor split into a micro landfall?"
   - id: exact_payment
     prompt: "Does an exact or near-exact payment exist in finance data?"
   - id: source_conflict
@@ -68,4 +89,3 @@ done_when:
   - "Every open payable has a status: paid, pay-now, verify-before-pay, scheduled, blocked, or not-due."
   - "Evidence files cite exact searches and raw outputs where useful."
   - "The next payment recommendation is explicit."
-
