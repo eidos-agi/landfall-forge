@@ -1,0 +1,88 @@
+# Copy to: landfalls/<name>.yaml
+landfall_version: 1
+name: example-landfall
+purpose: >
+  State the unique job this landfall performs. Keep it narrow enough that
+  a different landfall could own a different arrival ritual in the same repo.
+
+when_to_run:
+  - "At the start of work in this domain"
+  - "After a relevant email/text/portal notification"
+  - "Before sending a human-facing status update"
+
+scope:
+  owns:
+    - "The responsibility this landfall owns"
+  does_not_own:
+    - "Adjacent responsibility owned by another landfall"
+
+sources:
+  repo:
+    paths:
+      - "README.md"
+      - "data/"
+      - "wiki/"
+  messages:
+    enabled: false
+    commands: []
+    related_people: []
+    search_terms: []
+  email:
+    enabled: false
+    commands: []
+    related_people: []
+    search_terms: []
+  finance:
+    enabled: false
+    commands: []
+    amount_searches: []
+  calendar:
+    enabled: false
+    commands: []
+  portals:
+    enabled: false
+    urls: []
+    human_only_fields:
+      - "credentials"
+      - "MFA or one-time codes"
+      - "identity verification"
+      - "bank or wire details"
+
+questions:
+  - id: changed_facts
+    prompt: "What materially changed since the last landfall?"
+  - id: responsibilities
+    prompt: "What is Daniel responsible for next?"
+  - id: task_coverage
+    prompt: "Is every responsibility represented in the repo task system?"
+  - id: stale_state
+    prompt: "Which repo tasks, payables, wiki pages, or drafts are stale?"
+
+write_targets:
+  evidence:
+    - "wiki/<domain>/work/<topic>/evidence.md"
+  tasks:
+    - "data/tasks.json"
+    - "wiki/<domain>/ops/tasks/"
+  summaries:
+    - "wiki/<domain>/work/<topic>/landfall-YYYY-MM-DD.md"
+
+output:
+  required_sections:
+    - "New facts"
+    - "Changed responsibilities"
+    - "Task updates made"
+    - "Human-only actions"
+    - "Next 3-5 actions"
+
+stop_conditions:
+  - "A source asks for credentials, MFA, identity verification, bank details, wire instructions, or payment submission."
+  - "The landfall would make a legal, tax, or financial decision without human approval."
+  - "Evidence conflicts and the next action could cause money movement or irreversible submission."
+
+done_when:
+  - "Fresh evidence has been checked."
+  - "Repo state has been updated or a no-change reason is recorded."
+  - "Human-only actions are clearly separated from agent actions."
+  - "Next actions are ordered."
+

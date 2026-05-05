@@ -1,0 +1,71 @@
+landfall_version: 1
+name: payables-landfall
+purpose: >
+  Refresh house-sale payables, verify which invoices are paid or unpaid,
+  prevent duplicate payments, and update the repo's payables and tasks.
+
+when_to_run:
+  - "Before paying any house-sale invoice"
+  - "After a vendor text/email arrives"
+  - "Before sending Heather a status update that mentions payments"
+
+scope:
+  owns:
+    - "Vendor invoice payment status"
+    - "Duplicate-payment risk"
+    - "Payable task updates"
+  does_not_own:
+    - "Legal portal tasks"
+    - "Listing price decisions"
+    - "Tax eligibility"
+
+sources:
+  repo:
+    paths:
+      - "data/eagledr/payables.json"
+      - "data/eagledr/tasks.json"
+      - "wiki/239-eagle/work/*/evidence.md"
+  messages:
+    enabled: true
+    related_people: ["Heather Mitchell", "vendor phone numbers"]
+    search_terms: ["invoice", "paid", "payment", "Zelle", "Venmo", "CashApp"]
+  email:
+    enabled: true
+    related_people: ["QuickBooks", "Jobber", "Monarch", "vendor emails"]
+    search_terms: ["invoice", "receipt", "payment", "paid", "balance due"]
+  finance:
+    enabled: true
+    commands:
+      - "reeves-finance find-payment --amount <amount> --tolerance <tolerance> --start <date> --end <date> --limit 100 --json"
+      - "reeves finance search <vendor> --days 120 --limit 50 --json"
+
+questions:
+  - id: exact_payment
+    prompt: "Does an exact or near-exact payment exist in finance data?"
+  - id: source_conflict
+    prompt: "Do email, Notion, messages, and finance disagree?"
+  - id: duplicate_risk
+    prompt: "Could paying now duplicate an existing payment?"
+  - id: next_payment
+    prompt: "What is the safest next payable to handle?"
+
+write_targets:
+  evidence:
+    - "wiki/239-eagle/work/<vendor>/evidence.md"
+  tasks:
+    - "data/eagledr/tasks.json"
+    - "data/eagledr/payables.json"
+    - "wiki/239-eagle/ops/tasks/"
+  summaries:
+    - "wiki/239-eagle/work/payables-landfall-YYYY-MM-DD.md"
+
+stop_conditions:
+  - "Payment submission is required."
+  - "Only partial evidence exists for a large payment."
+  - "A portal asks for credentials, MFA, identity, bank, or wire details."
+
+done_when:
+  - "Every open payable has a status: paid, pay-now, verify-before-pay, scheduled, blocked, or not-due."
+  - "Evidence files cite exact searches and raw outputs where useful."
+  - "The next payment recommendation is explicit."
+
