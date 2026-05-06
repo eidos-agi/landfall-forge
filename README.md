@@ -71,6 +71,30 @@ Then it should recommend one.
 | `landfall-run` | Execute a landfall definition and update repo state. |
 | `landfall-audit` | Check landfall coverage, quality, and stale outputs. |
 
+## Codex Skill
+
+This forge also carries a Codex wrapper skill:
+
+```text
+.codex/skills/landfall/SKILL.md
+```
+
+That skill is intentionally generic. It teaches Codex the landfall protocol, then reads the target repo's own `landfalls/*.yaml` files for domain behavior.
+
+If a target repo has no landfalls yet, the Codex skill falls back to `forge-forge`:
+
+```bash
+forge info landfall-forge
+```
+
+or, from Daniel's usual local checkout:
+
+```bash
+~/repos-eidos-agi/forge-forge/.venv/bin/forge info landfall-forge
+```
+
+The fallback exists so agents discover the canonical forge instead of inventing a one-off generic landfall.
+
 ## Usage
 
 Copy or symlink the skills into a project:
@@ -86,6 +110,13 @@ Then ask an agent:
 /landfall-design payables-landfall
 /landfall-run payables-landfall
 /landfall-audit
+```
+
+For Codex, install or symlink the wrapper skill:
+
+```bash
+mkdir -p ~/.codex/skills
+ln -s ~/repos-eidos-agi/landfall-forge/.codex/skills/landfall ~/.codex/skills/landfall
 ```
 
 ## License

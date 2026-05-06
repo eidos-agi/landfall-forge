@@ -8,6 +8,7 @@ Landfall-forge is a knowledge forge for designing, auditing, and running repo-lo
 - `.claude/skills/landfall-run.md` - execute a landfall from a repo-local definition.
 - `.claude/skills/landfall-audit.md` - check whether a repo has the right landfalls and whether each is well formed.
 - `.claude/skills/landfall-map.md` - inventory candidate landfalls for a repo.
+- `.codex/skills/landfall/SKILL.md` - Codex wrapper skill that reads repo-local landfalls and falls back through forge-forge when none exist.
 - `templates/landfall.yaml` - portable landfall definition template.
 
 ## Repo Writing Contract
@@ -26,6 +27,7 @@ Use `landfalls/*.yaml` for definitions. Use the repo's existing wiki/tasks/payab
 
 - Do not create software in this forge.
 - Do not treat one landfall as universal.
+- The Codex skill is universal, but its domain behavior must come from repo-local `landfalls/*.yaml`.
+- If a repo lacks landfalls, route through `forge-forge` to find `landfall-forge` before designing them.
 - Do not hide source refresh logic in prose only; encode it in the YAML.
 - Stop on human-only actions: credentials, MFA, identity verification, bank/wire data, legal judgment, and money movement.
-
