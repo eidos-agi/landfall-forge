@@ -15,30 +15,51 @@ description: >-
 
 The skill is universal; the landfalls are local.
 
-Do not put domain-specific behavior in this skill. Read it from the current repo's `landfalls/` directory. If the repo has no landfalls, use `forge-forge` to locate `landfall-forge`, then map/design landfalls for this repo.
+Do not put domain-specific behavior in this skill. Read it from the current repo's `landfalls/` directory. If the repo has no landfalls, use `landfall` / `forge-forge` to locate `landfall-forge`, then map/design landfalls for this repo.
+
+## CLI Front Door
+
+Prefer the `landfall` CLI first:
+
+```bash
+landfall doctor
+landfall list
+landfall brief <name-or-request>
+landfall audit
+```
+
+The CLI is not the domain brain. It is the router:
+
+- local repo has `landfalls/*.yaml` -> read and brief those contracts
+- local repo has no landfalls -> call forge-forge for `landfall-forge`
+- ambiguous request -> infer the best local landfall from the user's wording and the YAML identity/purpose
+
+After `landfall brief` or `landfall run`, the LLM executes the brief safely. The CLI intentionally does not submit forms, move money, send messages, or make legal/tax/financial judgments.
 
 ## Workflow
 
 1. Identify the current repo root.
-2. Look for:
+2. Run `landfall doctor` if available.
+3. Look for:
    - `landfalls/README.md`
    - `landfalls/*.yaml`
-3. If landfalls exist:
+4. If landfalls exist:
    - read the relevant YAML definitions
+   - use `landfall brief <request>` to choose/brief when the right landfall is not obvious
    - infer the best fit from the user's request, browser context, recent repo state, and source freshness
    - if ambiguous, present 2-4 options by size: `micro`, `focused`, `broad`, `strategic`
    - run the selected landfall
-4. If no landfalls exist:
+5. If no landfalls exist:
    - do not improvise a hidden task system
-   - ask `forge-forge` for `landfall-forge`
+   - run `landfall forge-info` or ask `forge-forge` for `landfall-forge`
    - use `landfall-forge`'s map/design pattern to create repo-local `landfalls/` definitions
-5. Write results only to the repo surfaces declared by the landfall:
+6. Write results only to the repo surfaces declared by the landfall:
    - tasks
    - wiki/work notes
    - evidence files
    - payables/status data
    - calendar notes or drafts when explicitly listed
-6. Stop before human-only actions.
+7. Stop before human-only actions.
 
 ## Forge-Fallback Commands
 

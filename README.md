@@ -95,6 +95,41 @@ or, from Daniel's usual local checkout:
 
 The fallback exists so agents discover the canonical forge instead of inventing a one-off generic landfall.
 
+## CLI
+
+`landfall` is the universal front door. It is generic on purpose:
+
+- If the current repo has `landfalls/*.yaml`, it reads those definitions.
+- If the current repo has no landfalls, it calls `forge-forge` for `landfall-forge` and tells the agent how to design repo-local landfalls.
+- It does not contain house-sale, finance, legal, or vendor-specific behavior. That belongs in the target repo's YAML.
+
+Install from the local checkout on Daniel's machine:
+
+```bash
+cd ~/repos-eidos-agi/landfall-forge
+pipx install -e . --force
+```
+
+Homebrew Python may reject direct global `pip install -e .` because of PEP 668. `pipx`
+keeps the CLI isolated while still putting `landfall` on PATH.
+
+Then from any repo:
+
+```bash
+landfall doctor
+landfall list
+landfall brief payables-landfall
+landfall audit
+```
+
+The `run` command is intentionally an agent brief, not a blind automation engine:
+
+```bash
+landfall run heather-landfall
+```
+
+The LLM executes the brief, refreshes the YAML-listed sources, writes only to declared repo targets, and stops before credentials, MFA, signatures, legal/tax/financial judgment, bank details, wire instructions, payment submission, or irreversible portal submission.
+
 ## Usage
 
 Copy or symlink the skills into a project:

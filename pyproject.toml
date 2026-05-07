@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "landfall-forge"
+version = "0.1.0"
+description = "Universal landfall CLI for repo-local arrival rituals"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+  { name = "Eidos AGI" }
+]
+dependencies = []
+
+[project.scripts]
+landfall = "landfall_forge.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["landfall_forge"]
